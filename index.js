@@ -4,11 +4,13 @@ const cors = require("cors");
 const { dbConnection } = require('./database/config');
 const productsRoutes = require('./routes/product');
 const imageRoutes = require('./routes/images');
-const categoryRoutes = require('./routes/category')
+const categoryRoutes = require('./routes/category');
 const authRoutes = require("./routes/auth");
+// const usersRoutes = require("./routes/user");
 const bodyParser = require('body-parser');
-
+const {createRoles} = require('./libs/initialSetup');
 const app = express();
+createRoles();
 const port = process.env.APP_PORT;
 dbConnection();
 
@@ -27,7 +29,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/api', productsRoutes)
 app.use('/api', categoryRoutes)
-app.use("/auth", authRoutes);
+// app.use('/api', usersRoutes)
+app.use('/api', authRoutes);
 // Registrar la ruta para la eliminación de imágenes
 app.use('/api/images', imageRoutes);
 app.use('/public', express.static(`${__dirname}/storage/imgs`))

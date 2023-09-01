@@ -1,12 +1,12 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-
+const Role = require("../models/role")
 const SECRET = process.env.SECRET_SEED;
 
 const registerUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, roles } = req.body;
 
     // Verificar si el usuario ya existe
     const existingUser = await User.findOne({ email });
@@ -19,39 +19,55 @@ const registerUser = async (req, res) => {
       password: await User.encryptPassword(password),
     });
 
-    const savedUser = await user.save();
+    if(roles) {
+      const foundRoles = await Role.find({name: {$in: roles}})
+      user.roles = foundRoles.map(role => role._id )
+    }else{
+      const role = await Role.findOne({name: "usuario"})
+      user.roles = [role._id];
+    }
 
-    const token = jwt.sign({id: savedUser._id } , SECRET, {
-      expiresIn: '2h'
+
+    const savedUser = await user.save();
+    console.log(savedUser)
+
+    const token = jwt.sign({id: savedUser._id }, SECRET, {
+      expiresIn: '86400' //24hs
     })
 
-    res.status(201).json({ token, message: "User registered successfully" });
+    res.status(201).json({ token, user: savedUser, message: "User registered successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// const loginUser = async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
 
-//     const user = await User.findOne({ email });
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
 
-//     const isPasswordValid = await bcrypt.compare(password, user.password);
-//     if (!isPasswordValid) {
-//       return res.status(401).json({ message: "Invalid credentials" });
-//     }
 
-//     const token = jwt.sign({ userId: user._id }, "your-secret-key", { expiresIn: "1h" });
+const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-//     res.json({ token });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
+    const userFound = await User.findOne({email}).populate("roles");
+
+    if(!userFound) return res.status(400).json({message: "User not found"})
+
+    console.log(userFound)
+    
+    const matchPassword = await User.comparePassword(password, userFound.password)
+    if(!matchPassword) return res.status(401).json({token: null, message: "Invalid password" });
+    
+
+    const token = jwt.sign({id: userFound._id }, SECRET, { expiresIn: "86400" });
+
+    res.json({ 
+      user: userFound,
+      token });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 
 module.exports = {

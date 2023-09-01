@@ -1,9 +1,8 @@
 // models/User.js
 const mongoose = require("mongoose");
-const Schema = require("mongoose");
 const bcrypt = require("bcrypt");
 
-const userSchema = new mongoose.Schema({
+const userSchema = mongoose.Schema({
   email: {
     type: String,
     required: true,
@@ -13,9 +12,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  role: {
-    type: Schema.Types.ObjectId,
-    ref: 'Role',
+  roles: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Role",
     
 }
 }, { 
