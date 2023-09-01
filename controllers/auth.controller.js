@@ -1,12 +1,13 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const Role = require("../models/role")
+const Role = require("../models/role");
+const { newToken } = require("../helpers/jwt");
 const SECRET = process.env.SECRET_SEED;
 
 const registerUser = async (req, res) => {
   try {
-    const { email, password, roles } = req.body;
+    const { email, password } = req.body;
 
     // Verificar si el usuario ya existe
     const existingUser = await User.findOne({ email });
@@ -14,35 +15,22 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: "Email already exists" });
     }
 
+    const role = await Role.findOne({name: "usuario"})
+
     const user = new User({
       email,
       password: await User.encryptPassword(password),
+      roles:role._id
     });
 
-    if(roles) {
-      const foundRoles = await Role.find({name: {$in: roles}})
-      user.roles = foundRoles.map(role => role._id )
-    }else{
-      const role = await Role.findOne({name: "usuario"})
-      user.roles = [role._id];
-    }
-
-
     const savedUser = await user.save();
-    console.log(savedUser)
-
-    const token = jwt.sign({id: savedUser._id }, SECRET, {
-      expiresIn: '86400' //24hs
-    })
+    const token = await newToken(savedUser._id);
 
     res.status(201).json({ token, user: savedUser, message: "User registered successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
-
-
 
 const loginUser = async (req, res) => {
   try {
@@ -57,8 +45,7 @@ const loginUser = async (req, res) => {
     const matchPassword = await User.comparePassword(password, userFound.password)
     if(!matchPassword) return res.status(401).json({token: null, message: "Invalid password" });
     
-
-    const token = jwt.sign({id: userFound._id }, SECRET, { expiresIn: "86400" });
+    const token = await newToken(userFound._id);
 
     res.json({ 
       user: userFound,

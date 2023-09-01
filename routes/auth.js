@@ -9,9 +9,7 @@ router.post("/register", [checkDuplicateEmail], registerUser);
 router.post("/login", loginUser);
 
 //jwt 
-router.get("/renew", renewToken, verifyToken);
-
-
+router.get("/renew", verifyToken, renewToken);
 
 
 module.exports = router;
