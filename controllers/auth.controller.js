@@ -1,9 +1,6 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const Role = require("../models/role");
 const { newToken } = require("../helpers/jwt");
-const SECRET = process.env.SECRET_SEED;
 
 const registerUser = async (req, res) => {
   try {
@@ -54,8 +51,6 @@ const loginUser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
-
 
 module.exports = {
     loginUser,
