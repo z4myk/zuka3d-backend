@@ -35,12 +35,12 @@ const loginUser = async (req, res) => {
 
     const userFound = await User.findOne({email}).populate("roles");
 
-    if(!userFound) return res.status(400).json({message: "User not found"})
+    if(!userFound) return res.status(400).json({message: "Email no encontrado"})
 
     console.log(userFound)
     
     const matchPassword = await User.comparePassword(password, userFound.password)
-    if(!matchPassword) return res.status(401).json({token: null, message: "Invalid password" });
+    if(!matchPassword) return res.status(401).json({token: null, message: "La contraseña es invalida" });
     
     const token = await newToken(userFound._id);
 

@@ -13,7 +13,7 @@ const orderSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    street: {
+    address: {
         type: String,
         required: true,
     },
@@ -26,7 +26,7 @@ const orderSchema = mongoose.Schema({
         required: true,
     },
     phone: {
-        type: String,
+        type: Number,
         required: true,
     },
     email: {
@@ -38,20 +38,27 @@ const orderSchema = mongoose.Schema({
         required: true,
     },
     details:{
-        type: String,
+        type: Array,
         required: true,
     },
     totalPrice:{
         type: Number,
         required: true,
     },
-    status:{
-        type: Number,
+    terms:{
+        type: Boolean,
         required: true,
     },
-    clientId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+    status:{
+        type: String,
+        required: true,
+    },
+    trackingCode: {
+        type: String,
+    },
+    date:{
+        type: Date,
+        default: Date.now,
     },
 }, {
     timestamps: true,

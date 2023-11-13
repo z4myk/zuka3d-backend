@@ -6,6 +6,8 @@ const productsRoutes = require('./routes/product');
 const imageRoutes = require('./routes/images');
 const categoryRoutes = require('./routes/category');
 const authRoutes = require("./routes/auth");
+const ordersRoutes = require("./routes/order");
+const paymentRoutes = require("./routes/payment");
 // const usersRoutes = require("./routes/user");
 const bodyParser = require('body-parser');
 const {createRoles} = require('./libs/initialSetup');
@@ -29,8 +31,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/api', productsRoutes)
 app.use('/api', categoryRoutes)
-// app.use('/api', usersRoutes)
+app.use('/api', ordersRoutes)
+app.use('/api', paymentRoutes)
 app.use('/api', authRoutes);
+// app.use('/api', usersRoutes)
 // Registrar la ruta para la eliminación de imágenes
 app.use('/api/images', imageRoutes);
 app.use('/public', express.static(`${__dirname}/storage/imgs`))

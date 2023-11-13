@@ -73,7 +73,7 @@ const createCategoryPublication = async (req, res = response) => {
 
     const categoryId = req.params.id;
     try {
-      const cat = await Products.findById(categoryId);
+      const cat = await Category.findById(categoryId);
       if (!cat) {
         return res.status(404).json({
           ok: false,

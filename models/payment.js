@@ -6,15 +6,28 @@ const paymentSchema = mongoose.Schema({
         required: true,
     },
     numberOperation: {
+        type: Number,
+        required: true,
+    },
+    transferred: {
+        type: String,
+        required: true,
+    },
+    paymentMethod: {
         type: String,
         required: true,
     },
     comments:{
         type: String,
     },
-    orderId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Order",
+    date:{
+        type: Date,
+        default: Date.now,
+    },
+    paymentId: {
+        type: mongoose.Schema.Types.ObjectId, // Cambia el tipo de dato a ObjectId
+        ref: 'Order', 
+        required: true,
     },
 
 }, {
