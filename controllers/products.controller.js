@@ -23,7 +23,7 @@ const createProductPublication = async (req, res = response) => {
       productPublication.setImage(filename);
     }
     // Construir la URL completa de la imagen
-    const imageURL = `${process.env.APP_HOST}/public/${productPublication.image}`;
+    const imageURL = `${process.env.APP_HOST}:${process.env.APP_PORT}/public/${productPublication.image}`;
     productPublication.setImageURL(imageURL);
 
     await productPublication.save();
