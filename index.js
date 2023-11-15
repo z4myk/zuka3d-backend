@@ -37,7 +37,7 @@ app.use('/api', authRoutes);
 // app.use('/api', usersRoutes)
 // Registrar la ruta para la eliminación de imágenes
 app.use('/api/images', imageRoutes);
-app.use('/public', express.static(`${__dirname}/storage/imgs`))
+app.use('/public', express.static(`${__dirname}/public/imgs`));
 
     app.use(function (req, res, next) {
     
