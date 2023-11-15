@@ -1,5 +1,5 @@
 const Role = require("../models/role")
-const User = require("../models/User");
+const User = require("../models/user");
 
 const checkDuplicateEmail = async (req, res, next) => {
     const email = await User.findOne({email: req.body.email})

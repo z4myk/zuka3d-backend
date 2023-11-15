@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+const User = require("../models/user");
 const Role = require("../models/role")
 const SECRET = process.env.SECRET_SEED;
 
